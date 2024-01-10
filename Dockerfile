@@ -1,4 +1,4 @@
-FROM php:8-apache
+FROM php:8.2.12-cli
 RUN apt-get update && apt-get upgrade -y  \
     && apt-get install -y rsync sendmail libfreetype-dev libjpeg62-turbo-dev libpng-dev libicu-dev zip libzip-dev libpq-dev \
     && docker-php-ext-configure intl && docker-php-ext-install intl \
@@ -10,6 +10,10 @@ RUN apt-get update && apt-get upgrade -y  \
     && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-configure zip && docker-php-ext-install zip \
     && a2enmod rewrite
+
+RUN docker-php-ext-configure pcntl --enable-pcntl \
+  && docker-php-ext-install \
+    pcntl
 
 EXPOSE 80
 
